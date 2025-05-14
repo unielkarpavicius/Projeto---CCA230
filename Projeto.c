@@ -458,7 +458,6 @@ int menu_cadastro(Lista *lista) { // Função para o menu de cadastro de pacient
 void enfilerar(Fila* fila, const char nome[], Pilha*pilha) { /// Função para enfileirar um paciente na fila normal
     Celula* paciente = retornar_paciente_arquivo(nome); // Pega os dados do paciente salvo no arquivo "paciente.txt" através da fução "retorna_paciente_arquivo"
     if (paciente == NULL) {
-        printf("Paciente não encontrado no arquivo!\n"); // Caso o paciente não for encontrado
         return;
     }
     Efila *novo = inicializa_efila(); // Cria uma nova celula para a fila
@@ -769,12 +768,15 @@ void desfazer_ultima_operacao(Fila* fila, Pilha* pilha) {
         novo->Dados->entrada->dia = op->paciente->entrada->dia;
         novo->Dados->entrada->mes = op->paciente->entrada->mes;
         novo->Dados->entrada->ano = op->paciente->entrada->ano;
-        if (fila->Qtde == 0) { // Insere no final da fila
-            fila->Head = novo;
-        } else {
-            fila->Tail->Proximo = novo;
-        }
-        fila->Tail = novo;
+        // if (fila->Qtde == 0) { // Insere no final da fila
+        //     fila->Head = novo;
+        // } else {
+        //     fila->Tail->Proximo = novo;
+        // }
+        // fila->Head->Proximo = 
+        Efila* temp = fila->Head;
+        fila->Head = novo;
+        fila->Head->Proximo = temp;
         fila->Qtde++;
         printf("Desfeita operação de REMOVER: paciente reinserido na fila.\n");
     }
@@ -795,7 +797,7 @@ void menu_pesquisa() { // Função para o menu de pesquisa usando árvores biná
     int op;
     do {
         printf("\n==========================================\n");
-        printf("\n            MENU PESQUISA");
+        printf("              MENU PESQUISA");
         printf("\n==========================================\n");
         printf("1. Ordenado por ANO\n");
         printf("2. Ordenado por MÊS\n");
