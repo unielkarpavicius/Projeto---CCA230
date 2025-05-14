@@ -9,18 +9,18 @@
 #define strcasecmp _stricmp
 #endif
 
-typedef struct Data {
+typedef struct Data { // Estrutura para armazenar informações de data
     int dia;
     int mes;
     int ano;
 } Data;
 
-typedef struct Celula {
+typedef struct Celula { // Estrutura principal do paciente
     char nome[LEN];
     char RG[LEN];
     int idade;
     Data *entrada;
-    struct Celula *proxima;
+    struct Celula *proxima; // Para lista encadeada de todos os pacientes
 } Celula;
 
 typedef struct Operacao {
@@ -30,42 +30,41 @@ typedef struct Operacao {
 } Operacao;
 
 typedef struct {
-    Operacao *topo;// Ponteiro para o top da pilha
+    Operacao *topo; // Ponteiro para o top da pilha
 } Pilha;
 
-typedef struct FilaP { 
+typedef struct FilaP { // Estrutura para a fila prioritária
     Celula* heap[MAX_PRIORITARIO];
     int qtde;
 }FilaP;
 
-typedef struct Lista {
+typedef struct Lista { // Estrutura para a lista de pacientes
     int qtde;
     Celula *primeiro;
 } Lista;
 
-typedef struct Efila{
+typedef struct Efila{ // Estrutura para a fila 
     Celula *Dados; 
     struct Efila *Proximo; 
 }Efila;
 
-typedef struct Fila { 
+typedef struct Fila { // Fila normal de atendimento 
     Efila *Head; 
     Efila *Tail;
     int Qtde; 
 }Fila;
 
-typedef struct NO{
+typedef struct NO{ // Estrutura para o nó da arvore binária
     Celula* paciente;
     struct NO *esq, *dir;
 }NO;
 
-typedef struct {
+typedef struct { // Estrutura da arvore binária de busca
     NO *raiz;
     int qtde;
 }Arvore;
 
-// Função para a inicialização da fila 
-Fila *inicializa_fila(){
+Fila *inicializa_fila(){ // Função para a inicialização da fila 
     Fila *fila = malloc(sizeof(Fila));
     if(fila == NULL){
         printf("Erro de alocacao de memoria!\n");
@@ -196,7 +195,6 @@ void remover_paciente(Lista *l, char *nome) { // Função para remover paciente
     Celula *atual = l->primeiro;
     Celula *anterior = NULL;
     limpar_espacos(nome);
-
     while (atual != NULL && strcmp(atual->nome, nome) != 0) {
         anterior = atual;
         atual = atual->proxima;
@@ -210,7 +208,6 @@ void remover_paciente(Lista *l, char *nome) { // Função para remover paciente
     } else {
         anterior->proxima = atual->proxima;
     }
-
     free(atual->entrada);
     free(atual);
     l->qtde--;
@@ -228,7 +225,6 @@ void atualiza_dados(Lista *l) { // Função para atualizar dados
     printf("Digite o nome do paciente que deseja atualizar: ");
     fgets(nome, LEN, stdin);
     limpar_espacos(nome);
-
     Celula *paciente = buscar_paciente(l, nome);
     if (paciente == NULL) {
         printf("Paciente nao encontrado!\n");
@@ -346,7 +342,6 @@ Celula* retornar_paciente_arquivo(const char* nome_busca) {
         fscanf(arquivo, "%d\n", &idade);
         fscanf(arquivo, "%d %d %d\n", &entrada.dia, &entrada.mes, &entrada.ano);
         if (strcasecmp(nome, nome_busca) == 0) { // Compara com o nome buscado
-            
             paciente_encontrado = inicializa_celula(); // Inicializa uma nova celula para armazenar os dados do paciente
             strcpy(paciente_encontrado->nome, nome); // Armazena o nome encontrado dentro do nome da celula "paciente_encontrado"
             strcpy(paciente_encontrado->RG, rg); // Armazena o Rg encontrado dentro do Rg da celula "paciente_encontrado"
