@@ -481,7 +481,7 @@ void enfilerar(Fila* fila, const char nome[], Pilha*pilha) { //Enfilera Um Pacie
     copia->entrada->dia = paciente->entrada->dia;
     copia->entrada->mes = paciente->entrada->mes;
     copia->entrada->ano = paciente->entrada->ano;
-    push_operacao(pilha, "ENFILEIRAR", copia);// registra o ENFILEIRAR na pilha 
+    push_operacao(pilha, "ENFILEIRAR", copia); // registra o ENFILEIRAR na pilha 
     // Libera a memória do paciente retornado pela consulta
     free(paciente->entrada);
     free(paciente);
@@ -797,7 +797,9 @@ void menu_pesquisa() { // Menu de Pesquisa
     inserir_pacientes_em_arvore(&arvoreIdade, comparar_por_idade);
     int op;
     do {
-        printf("\n--- Menu Pesquisa ---\n");
+        printf("\n==========================================\n");
+        printf("\n            MENU PESQUISA");
+        printf("\n==========================================\n");
         printf("1. Ordenado por ANO\n");
         printf("2. Ordenado por MÊS\n");
         printf("3. Ordenado por DIA\n");
@@ -805,7 +807,7 @@ void menu_pesquisa() { // Menu de Pesquisa
         printf("0. Sair\n");
         printf("Escolha: ");
         scanf("%d", &op);
-        printf("\n----------------------\n");
+        printf("\n==========================================\n");
         switch (op) {
             case 1: in_order(arvoreAno.raiz); 
                 break;
@@ -826,8 +828,8 @@ void menu_desfazer(Fila *fila, Pilha *pilha) {
     char ch, buffer[256];
     while (1) {
         printf("\n==========================================\n");
-        printf("            MENU DE OPERACOES (DESFAZER)\n");
-        printf("==========================================\n");
+        printf("          MENU DE OPERACOES (DESFAZER)");
+        printf("\n==========================================\n");
         printf("1 - Desfazer ultima operacao\n");
         printf("2 - Mostrar log de operacoes\n");
         printf("0 - Voltar ao menu principal\n");
