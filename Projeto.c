@@ -3,8 +3,8 @@
 #include <string.h>
 #include <locale.h>
 #include <stdbool.h>
-#define MAX_PRIORITARIO 20
-#define LEN 100
+#define MAX_PRIORITARIO 20 // Define o tamanho máximo da fila prioritária
+#define LEN 100 // Define o tamanho máximo para strings
 #ifdef _WIN32
 #define strcasecmp _stricmp
 #endif
@@ -16,59 +16,59 @@ typedef struct Data { // Estrutura para armazenar informações de data
 } Data;
 
 typedef struct Celula { // Estrutura principal do paciente
-    char nome[LEN];
-    char RG[LEN];
-    int idade;
-    Data *entrada;
+    char nome[LEN]; // Nome do paciente
+    char RG[LEN]; // RG do paciente
+    int idade; // Idade do paciente
+    Data *entrada; // Data de entrada do paciente
     struct Celula *proxima; // Para lista encadeada de todos os pacientes
 } Celula;
 
-typedef struct Operacao {
-    char tipo[10];// Vai armazenar o tipo de ação feita 
+typedef struct Operacao { // Estrutura para armazenar operações (para desfazer)
+    char tipo[10];// Vai armazenar o tipo de ação feita (ENFILEIRAR/REMOVER)
     Celula *paciente;// Pega o paciente envolvido com a ação
     struct Operacao *prox;// Proxima operação na pilha
 } Operacao;
 
-typedef struct {
+typedef struct { // Estrutura para a pilha de operações
     Operacao *topo; // Ponteiro para o top da pilha
 } Pilha;
 
 typedef struct FilaP { // Estrutura para a fila prioritária
-    Celula* heap[MAX_PRIORITARIO];
-    int qtde;
+    Celula* heap[MAX_PRIORITARIO]; // Heap para armazenar pacientes prioritários
+    int qtde; // Quantidade de pacientes na fila
 }FilaP;
 
 typedef struct Lista { // Estrutura para a lista de pacientes
-    int qtde;
-    Celula *primeiro;
+    int qtde; // Quantidade de pacientes na lista
+    Celula *primeiro; // Ponteiro para o primeiro paciente da lista
 } Lista;
 
 typedef struct Efila{ // Estrutura para a fila 
-    Celula *Dados; 
-    struct Efila *Proximo; 
+    Celula *Dados; // Dados do paciente
+    struct Efila *Proximo; // Ponteiro para o próximo elemento da fila
 }Efila;
 
 typedef struct Fila { // Fila normal de atendimento 
-    Efila *Head; 
-    Efila *Tail;
+    Efila *Head; // Ponteiro para o início da fila
+    Efila *Tail; // Ponteiro para o fim da fila
     int Qtde; 
 }Fila;
 
 typedef struct NO{ // Estrutura para o nó da arvore binária
     Celula* paciente;
-    struct NO *esq, *dir;
+    struct NO *esq, *dir; // Ponteiros para os filhos esquerdo e direito
 }NO;
 
 typedef struct { // Estrutura da arvore binária de busca
-    NO *raiz;
+    NO *raiz; // Ponteiro para a raiz da árvore
     int qtde;
 }Arvore;
 
 Fila *inicializa_fila(){ // Função para a inicialização da fila 
-    Fila *fila = malloc(sizeof(Fila));
+    Fila *fila = malloc(sizeof(Fila)); // Aloca memória para a fila
     if(fila == NULL){
         printf("Erro de alocacao de memoria!\n");
-        exit(1);
+        exit(1); // Encerra o programa em caso de erro
     }
     fila->Qtde = 0;
     fila->Head = NULL;
@@ -76,8 +76,8 @@ Fila *inicializa_fila(){ // Função para a inicialização da fila
     return fila;
 }
 
-Lista *inicializa_lista() { // Funções de inicialização
-    Lista *lista = malloc(sizeof(Lista));
+Lista *inicializa_lista() { // Funções de inicialização a lista de pacientes
+    Lista *lista = malloc(sizeof(Lista)); // Aloca memória para a lista
     if (lista == NULL) {
         printf("Erro de alocacao de memoria!\n");
         exit(1);
@@ -87,17 +87,17 @@ Lista *inicializa_lista() { // Funções de inicialização
     return lista;
 }
 
-Celula *inicializa_celula() { // Inicializa a celula
-    Celula *novo = malloc(sizeof(Celula));
+Celula *inicializa_celula() { // Inicializa a celula de paciente
+    Celula *novo = malloc(sizeof(Celula)); // Aloca memória para a célula
     if (novo == NULL) {
         printf("Erro de alocacao de memoria!\n");
         exit(1);
     }
     novo->proxima = NULL;
-    strcpy(novo->nome, "-");
-    strcpy(novo->RG, "000000000-00");
+    strcpy(novo->nome, "-"); // Inicializa o nome com "-"
+    strcpy(novo->RG, "000000000-00"); // Inicializa o RG com "000000000-00"
     novo->idade = 0;
-    novo->entrada = malloc(sizeof(Data));
+    novo->entrada = malloc(sizeof(Data)); // Aloca memória para a data de entrada
     if (novo->entrada == NULL) {
         printf("Erro de alocação de memoria!\n");
         exit(1);
@@ -108,18 +108,18 @@ Celula *inicializa_celula() { // Inicializa a celula
     return novo;
 }
 
-Efila *inicializa_efila(){ //Função para a inicialização da efila 
+Efila *inicializa_efila(){ // Função para inicializar um elemento da fila normal
     Efila *nova = (Efila*)malloc(sizeof(Efila));
     if (nova == NULL) {
         printf("Erro de alocacao de memoria!\n");
         exit(1);
     }
-    nova->Dados = inicializa_celula();
+    nova->Dados = inicializa_celula(); // Inicializa a célula de dados
     nova->Proximo = NULL; 
     return nova;
 }
 
-Pilha* inicializa_pilha() { //Função para a inicialização da pilha
+Pilha* inicializa_pilha() { //Função para a inicialização da pilha de operações
     Pilha* p = malloc(sizeof(Pilha));
     p->topo = NULL;
     return p;
@@ -136,7 +136,7 @@ Celula *buscar_paciente(Lista *l, const char *nome) { // Função para buscar pa
     Celula *atual = l->primeiro;
     while (atual != NULL) {
         if (strcmp(atual->nome, nome) == 0) {
-            return atual;
+            return atual; // Retorna o paciente se encontrado
         }
         atual = atual->proxima;
     }
@@ -144,7 +144,7 @@ Celula *buscar_paciente(Lista *l, const char *nome) { // Função para buscar pa
 }
 
 void cadastrar_paciente(Lista *l, char *nome, char *rg, int idade, Data *entrada) { // Função para cadastrar um paciente
-    Celula *novo = inicializa_celula();
+    Celula *novo = inicializa_celula(); // Cria uma nova célula para o paciente
     strcpy(novo->nome, nome);
     strcpy(novo->RG, rg);
     novo->idade = idade;
@@ -152,13 +152,13 @@ void cadastrar_paciente(Lista *l, char *nome, char *rg, int idade, Data *entrada
     novo->entrada->mes = entrada->mes;
     novo->entrada->ano = entrada->ano;
     
-    novo->proxima = l->primeiro;
+    novo->proxima = l->primeiro; // Insere o novo paciente no início da lista
     l->primeiro = novo;
     l->qtde++;
 }
 
 void salvar_pacientes(Lista *l) { // Função para escrever os pacientes no arquivo
-    FILE *arquivo = fopen("pacientes.txt", "w");
+    FILE *arquivo = fopen("pacientes.txt", "w"); // Abre o arquivo para escrita
     if (arquivo == NULL) {
         printf("Erro ao abrir arquivo para escrita!\n");
         return;
@@ -175,7 +175,7 @@ void salvar_pacientes(Lista *l) { // Função para escrever os pacientes no arqu
 }
 
 void salvar_pacientes_remov(Lista *l) { // Função para atualizar os pacientes no arquivo
-    FILE *arquivo = fopen("pacientes.txt", "w");
+    FILE *arquivo = fopen("pacientes.txt", "w"); // Abre o arquivo para escrita
     if (arquivo == NULL) {
         printf("Erro ao abrir arquivo para escrita!\n");
         return;
@@ -204,14 +204,14 @@ void remover_paciente(Lista *l, char *nome) { // Função para remover paciente
         return;
     }
     if (anterior == NULL) {
-        l->primeiro = atual->proxima;
+        l->primeiro = atual->proxima; // Remove o primeiro paciente
     } else {
-        anterior->proxima = atual->proxima;
+        anterior->proxima = atual->proxima; // Remove um paciente do meio ou fim
     }
-    free(atual->entrada);
-    free(atual);
+    free(atual->entrada); // Libera a memória da data de entrada
+    free(atual); // Libera a memória do paciente
     l->qtde--;
-    salvar_pacientes_remov(l);
+    salvar_pacientes_remov(l); // Atualiza o arquivo
     printf("Paciente removido com sucesso!\n");
 }
 
@@ -290,8 +290,8 @@ void atualiza_dados(Lista *l) { // Função para atualizar dados
     }
 }
 
-void ler_pacientes(Lista *l) {
-    FILE *arquivo = fopen("pacientes.txt", "r");
+void ler_pacientes(Lista *l) { // Função para ler os dados dos pacientes do arquivo
+    FILE *arquivo = fopen("pacientes.txt", "r"); // Abre o arquivo para leitura
     if (arquivo == NULL) {
         printf("Erro ao abrir arquivo para leitura!\n");
         return;
@@ -326,7 +326,7 @@ void mostrar_dados(Lista *l) { // Função para mostrar todos os pacientes
     printf("\n");
 }
 
-Celula* retornar_paciente_arquivo(const char* nome_busca) {
+Celula* retornar_paciente_arquivo(const char* nome_busca) { // Função para retornar um paciente do arquivo pelo nome
     FILE *arquivo = fopen("pacientes.txt", "r"); // Abre o arquivo para leitura
     if (arquivo == NULL) { // Verifica se o arquivo existe 
         printf("Erro ao abrir arquivo para leitura!\n");
@@ -359,7 +359,7 @@ Celula* retornar_paciente_arquivo(const char* nome_busca) {
     return paciente_encontrado;
 }
 
-void consulta_paciente(Lista *L) {
+void consulta_paciente(Lista *L) { // Função para consultar os dados de um paciente pelo nome
     char nome[LEN];
     printf("Digite o nome do paciente que deseja atualizar: ");
     fgets(nome, LEN, stdin); // Pega a respota do usuário
@@ -385,13 +385,13 @@ void liberar_lista(Lista *l) { // Função para liberar toda a lista
     while (atual != NULL) {
         Celula *temp = atual;
         atual = atual->proxima;
-        free(temp->entrada);
-        free(temp);
+        free(temp->entrada); // Libera a memória da data de entrada
+        free(temp); // Libera a memória da célula do paciente
     }
-    free(l);
+    free(l); // Libera a memória da lista
 }
 
-int menu_cadastro(Lista *lista) { // Função do menu principal
+int menu_cadastro(Lista *lista) { // Função para o menu de cadastro de pacientes
     char ch, buffer[256];
     char nome[LEN], rg[LEN];
     int idade;
@@ -455,7 +455,7 @@ int menu_cadastro(Lista *lista) { // Função do menu principal
     }
 }
 
-void enfilerar(Fila* fila, const char nome[], Pilha*pilha) { //Enfilera Um Paciente 
+void enfilerar(Fila* fila, const char nome[], Pilha*pilha) { /// Função para enfileirar um paciente na fila normal
     Celula* paciente = retornar_paciente_arquivo(nome); // Pega os dados do paciente salvo no arquivo "paciente.txt" através da fução "retorna_paciente_arquivo"
     if (paciente == NULL) {
         printf("Paciente não encontrado no arquivo!\n"); // Caso o paciente não for encontrado
@@ -490,12 +490,12 @@ void enfilerar(Fila* fila, const char nome[], Pilha*pilha) { //Enfilera Um Pacie
     printf("O paciente foi colocado na fila com sucesso!\n");
 }
 
-void remover_da_fila(Fila *fila,Pilha *pilha){
+void remover_da_fila(Fila *fila,Pilha *pilha){ // Função para remover um paciente da fila normal
     if (fila->Qtde == 0){ // Verifica se a fila esta vazia
         printf("Fila Vazia\n");
         return;
     }
-    Efila *temp = fila->Head; // Salva a célula atual
+    Efila *temp = fila->Head; // Armazena o primeiro elemento da fila
     Celula* backup = inicializa_celula(); // Cria uma cópia do paciente ANTES de liberar a memória
     strcpy(backup->nome, temp->Dados->nome);
     strcpy(backup->RG, temp->Dados->RG);
@@ -543,12 +543,13 @@ void liberar_fila(Fila*fila){ // Função para liberar a memoria da Fila, utiliz
     free(fila); // Retorna a lista vazia logo depois do termino das atividades do menu.   
 } 
 
-void trocar_dados(Celula **a, Celula **b) {
+void trocar_dados(Celula **a, Celula **b) { // Função para trocar os dados de dois pacientes (usada na fila prioritária)
     Celula *temp = *a;
     *a = *b;
     *b = temp;
 }
 
+// Funções para calcular os índices dos filhos e pai em um heap
 int filho_esquerda(int pai) {
     return (2 * pai + 1);
 }   
@@ -562,7 +563,7 @@ int ultimo_pai(FilaP *h) {
     return ((h->qtde / 2) - 1);
 }
 
-void peneirar_prioridade(FilaP *f, int pai) {
+void peneirar_prioridade(FilaP *f, int pai) { // Função para "peneirar" um elemento para a posição correta no heap (fila prioritária)
     int fe = filho_esquerda(pai);
     int fd = filho_direita(pai);
     int maior = pai; 
@@ -584,7 +585,7 @@ void construir_heap_prioridade(FilaP* f) { // Organiza a fila apartir do ultimo 
     }
 }
 
-void adicionar_na_heap(FilaP* f) {
+void adicionar_na_heap(FilaP* f) { // Função para adicionar um paciente na fila prioritária
     if (f->qtde >= MAX_PRIORITARIO) {
         printf("A fila prioritaria já está cheia (máximo de %d pacientes).\n", MAX_PRIORITARIO);
         return;
@@ -604,21 +605,21 @@ void adicionar_na_heap(FilaP* f) {
     printf("Paciente %s (Idade: %d) foi adicionado à fila prioritaria.\n", paciente->nome, paciente->idade);
 }
 
-void remover_maior_prioridade(FilaP* f) {
+void remover_maior_prioridade(FilaP* f) { // Função para remover o paciente com maior prioridade (mais velho) da fila prioritária
     if (f->qtde == 0) {
         printf("Fila prioritária vazia!\n");
         return;
     }
-    Celula* paciente = f->heap[0];
+    Celula* paciente = f->heap[0]; // O paciente com maior prioridade é a raiz do heap
     printf("Atendendo paciente prioritario: %s (Idade: %d)\n", paciente->nome, paciente->idade);
     f->heap[0] = f->heap[f->qtde - 1]; // Substitui a raiz pelo último elemento
     f->qtde--;
     peneirar_prioridade(f, 0); // Reorganiza o heap
-    free(paciente->entrada);
+    free(paciente->entrada); // Libera a memória do paciente
     free(paciente);
 }
     
-void mostrar_heap(FilaP* f) {
+void mostrar_heap(FilaP* f) { // Função para mostrar os pacientes na fila prioritária
     if (f->qtde == 0) {
         printf("Fila prioritaria vazia!\n");
         return;
@@ -630,12 +631,12 @@ void mostrar_heap(FilaP* f) {
     }
 }
 
-void Sobre(){
+void Sobre(){ // Função para exibir informações sobre 
     printf("\n==========================================\n");
     printf("             DADOS DOS ALUNOS");
     printf("\n==========================================\n");
+        printf("Nome: Luana Nascimento Karpavicius\n");
     printf("Nome: Matheus Marcondes Pereira Rufino\n");
-    printf("Nome: Luana Nascimento Karpavicius\n");
     printf("Ciclo: 7\n");
     printf("Curso: Engenharia de Robos\n");
     printf("Disciplina: Estrutura de dados\n");
@@ -643,23 +644,23 @@ void Sobre(){
     printf("\n==========================================\n");
 }
 
-typedef int (*ComparadorPaciente)(Celula*, Celula*);
-NO* inserir_na_arvore(NO* raiz, Celula* paciente, ComparadorPaciente cmp) {
-    if (raiz == NULL) {
+typedef int (*ComparadorPaciente)(Celula*, Celula*); // Define o tipo de função para comparar pacientes
+NO* inserir_na_arvore(NO* raiz, Celula* paciente, ComparadorPaciente cmp) { // Função para inserir um paciente na árvore binária de busca
+    if (raiz == NULL) { // Se a árvore estiver vazia, cria um novo nó
         NO* novo = (NO*)malloc(sizeof(NO));
         novo->paciente = paciente;
         novo->esq = novo->dir = NULL;
         return novo;
     }
-    if (cmp(paciente, raiz->paciente) < 0){
+    if (cmp(paciente, raiz->paciente) < 0){ // Se o paciente for "menor", insere na esquerda
         raiz->esq = inserir_na_arvore(raiz->esq, paciente, cmp);
-    } else {
+    } else { // Caso contrário, insere na direita
         raiz->dir = inserir_na_arvore(raiz->dir, paciente, cmp);
     }
     return raiz;
 }
 
-void in_order(NO* raiz) {
+void in_order(NO* raiz) { // Função para percorrer a árvore em ordem (in-order) e imprimir os pacientes
     if (raiz != NULL) {
         in_order(raiz->esq);
         printf("%s - Idade: %d - Entrada: %02d/%02d/%04d\n", raiz->paciente->nome, raiz->paciente->idade, raiz->paciente->entrada->dia, raiz->paciente->entrada->mes, raiz->paciente->entrada->ano);
@@ -667,7 +668,7 @@ void in_order(NO* raiz) {
     }
 }
 
-void inserir_pacientes_em_arvore(Arvore* arvore, ComparadorPaciente cmp) {
+void inserir_pacientes_em_arvore(Arvore* arvore, ComparadorPaciente cmp) { // Função para inserir pacientes do arquivo na árvore binária de busca
     FILE* arq = fopen("pacientes.txt", "r");
     if (!arq) {
         printf("Erro ao abrir pacientes.txt\n");
@@ -687,12 +688,13 @@ void inserir_pacientes_em_arvore(Arvore* arvore, ComparadorPaciente cmp) {
         novo->entrada->dia = entrada.dia;
         novo->entrada->mes = entrada.mes;
         novo->entrada->ano = entrada.ano;
-        arvore->raiz = inserir_na_arvore(arvore->raiz, novo, cmp);
+        arvore->raiz = inserir_na_arvore(arvore->raiz, novo, cmp); // Insere o paciente na árvore
         arvore->qtde++;
     }
     fclose(arq);
 }
 
+// Funções para comparar pacientes por diferentes critérios
 int comparar_por_ano(Celula* a, Celula* b) {
     return a->entrada->ano - b->entrada->ano;
 }
@@ -706,7 +708,7 @@ int comparar_por_idade(Celula* a, Celula* b) {
     return a->idade - b->idade;
 }
 
-void push_operacao(Pilha* pilha, const char* tipo, Celula* paciente) {
+void push_operacao(Pilha* pilha, const char* tipo, Celula* paciente) { // Função para adicionar uma operação na pilha de operações (para desfazer)
     Operacao* nova = malloc(sizeof(Operacao)); // Cria um novo nó de operação
     strcpy(nova->tipo, tipo);// Copia o tipo da operação ("ENFILEIRAR"/"REMOVER")
     nova->paciente = paciente;// Associa o paciente à operação
@@ -714,7 +716,7 @@ void push_operacao(Pilha* pilha, const char* tipo, Celula* paciente) {
     pilha->topo = nova;// Atualiza o topo da pilha
 }
 
-Operacao* pop_operacao(Pilha* pilha){
+Operacao* pop_operacao(Pilha* pilha){ 
     if(pilha->topo == NULL){// Pilha vazia
        printf("Nao ha registro de operacao na fila");
         return NULL;
@@ -781,7 +783,7 @@ void desfazer_ultima_operacao(Fila* fila, Pilha* pilha) {
     free(op);
 }
 
-void menu_pesquisa() { // Menu de Pesquisa 
+void menu_pesquisa() { // Função para o menu de pesquisa usando árvores binárias
     Arvore arvoreAno = {NULL, 0};
     Arvore arvoreMes = {NULL, 0};
     Arvore arvoreDia = {NULL, 0};
@@ -819,7 +821,7 @@ void menu_pesquisa() { // Menu de Pesquisa
     } while (op != 0);
 }
 
-void menu_desfazer(Fila *fila, Pilha *pilha) {
+void menu_desfazer(Fila *fila, Pilha *pilha) { // Função para o menu de desfazer operações
     char ch, buffer[256];
     while (1) {
         printf("\n==========================================\n");
@@ -974,6 +976,6 @@ int main() { // Função principal
     Fila *fila = inicializa_fila(); 
     Pilha *pilha = inicializa_pilha(); 
     ler_pacientes(lista);
-    menu(lista, fila, &filap,pilha);
+    menu(lista, fila, &filap,pilha); // Chama o menu principal do sistema
     return 0;
 }
