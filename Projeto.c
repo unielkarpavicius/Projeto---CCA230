@@ -955,7 +955,6 @@ void menu(Lista* l, Fila* f, FilaP *h,Pilha *p){ //Função para o Menu do Sitst
                 menu_desfazer(f,p);
                 break; 
             case '6':
-                salvar_pacientes_remov(l);
                 printf("Arquivo salvo com sucesso!\n");
                 break;
             case '7':
