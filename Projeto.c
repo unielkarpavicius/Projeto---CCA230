@@ -361,7 +361,7 @@ Celula* retornar_paciente_arquivo(const char* nome_busca) { // Função para ret
 
 void consulta_paciente(Lista *L) { // Função para consultar os dados de um paciente pelo nome
     char nome[LEN];
-    printf("Digite o nome do paciente que deseja atualizar: ");
+    printf("Digite o nome do paciente que deseja consultar: ");
     fgets(nome, LEN, stdin); // Pega a respota do usuário
     limpar_espacos(nome); // Limpa espaço vazia que pode ser deixado pelo o usuário
     Celula *atual = buscar_paciente(L, nome);
