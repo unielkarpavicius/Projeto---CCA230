@@ -818,7 +818,8 @@ void menu_pesquisa() { // Função para o menu de pesquisa usando árvores biná
                 break;
             case 0: 
                 break;
-            default: printf("Opção inválida.\n");
+            default: 
+            printf("Opção inválida.\n");
         }
     } while (op != 0);
 }
@@ -966,7 +967,7 @@ void menu(Lista* l, Fila* f, FilaP *h,Pilha *p){ //Função para o Menu do Sitst
                 liberar_lista(l);
                 return;
             default:
-                printf("Opção inválida!\n");
+                printf("Opção inválida! \n");
         }
     }
 }
